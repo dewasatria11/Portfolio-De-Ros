@@ -354,7 +354,13 @@ export default function Projects() {
 
   const uploadImage = async (f) => {
     const fileName = `${Date.now()}-${f.name}`;
-    await supabase.storage.from("project-images").upload(fileName, f);
+    const { error: uploadError } = await supabase.storage.from("project-images").upload(fileName, f);
+    
+    if (uploadError) {
+      alert(`Upload failed: ${uploadError.message}. Make sure bucket is named 'project-images' (lowercase) and is Public.`);
+      throw uploadError;
+    }
+
     const { data } = supabase.storage
       .from("project-images")
       .getPublicUrl(fileName);
@@ -362,25 +368,36 @@ export default function Projects() {
   };
 
   const handleCreate = async (form, file) => {
-    setUploading(true);
-    let imgUrl = "";
-    if (file) imgUrl = await uploadImage(file);
-    await supabase.from("projects").insert({
-      Title: form.Title,
-      Description: form.Description,
-      Img: imgUrl,
-      TechStack: form.TechStack.split(",")
-        .map((s) => s.trim())
-        .filter(Boolean),
-      Features: form.Features.split(",")
-        .map((s) => s.trim())
-        .filter(Boolean),
-      Link: form.Link,
-      Github: form.Github,
-    });
-    setShowCreate(false);
-    setUploading(false);
-    fetchProjects();
+    try {
+      setUploading(true);
+      let imgUrl = "";
+      if (file) imgUrl = await uploadImage(file);
+      
+      const { error: dbError } = await supabase.from("projects").insert({
+        Title: form.Title,
+        Description: form.Description,
+        Img: imgUrl,
+        TechStack: form.TechStack.split(",")
+          .map((s) => s.trim())
+          .filter(Boolean),
+        Features: form.Features.split(",")
+          .map((s) => s.trim())
+          .filter(Boolean),
+        Link: form.Link,
+        Github: form.Github,
+      });
+
+      if (dbError) throw dbError;
+
+      setShowCreate(false);
+      setUploading(false);
+      fetchProjects();
+    } catch (error) {
+      setUploading(false);
+      if (!error.message.includes("Upload failed")) {
+        alert(`Failed to save project: ${error.message}`);
+      }
+    }
   };
 
   const handleEdit = async (form, file) => {

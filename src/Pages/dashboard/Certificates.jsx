@@ -79,9 +79,23 @@ export default function Certificates() {
     if (!file) return
     setUploading(true)
     const fileName = `cert-${Date.now()}-${file.name}`
-    await supabase.storage.from('certificate-images').upload(fileName, file)
+    
+    const { error: uploadError } = await supabase.storage.from('certificate-images').upload(fileName, file)
+    if (uploadError) {
+      alert(`Upload failed: ${uploadError.message}. Make sure bucket is named 'certificate-images' (lowercase) and is Public.`)
+      setUploading(false)
+      return
+    }
+
     const { data } = supabase.storage.from('certificate-images').getPublicUrl(fileName)
-    await supabase.from('certificates').insert({ Img: data.publicUrl })
+    
+    const { error: dbError } = await supabase.from('certificates').insert({ Img: data.publicUrl })
+    if (dbError) {
+      alert(`Database insert failed: ${dbError.message}. Check certificates table RLS policies.`)
+      setUploading(false)
+      return
+    }
+
     setFile(null); setPreview(null); setUploading(false)
     fetchCerts()
   }
