@@ -32,7 +32,7 @@ const CertCard = ({ cert, onDelete }) => {
           <div className="w-full aspect-[16/11.5] bg-white/5 animate-pulse" />
         )}
         <img
-          src={cert.Img}
+          src={cert.img}
           alt="Certificate"
           onLoad={() => setImgLoaded(true)}
           className={`w-full aspect-[16/11.5] object-cover group-hover:scale-105 transition-transform duration-500 ${imgLoaded ? 'block' : 'hidden'}`}
@@ -89,7 +89,7 @@ export default function Certificates() {
 
     const { data } = supabase.storage.from('certificate-images').getPublicUrl(fileName)
     
-    const { error: dbError } = await supabase.from('certificates').insert({ Img: data.publicUrl })
+    const { error: dbError } = await supabase.from('certificates').insert({ img: data.publicUrl })
     if (dbError) {
       alert(`Database insert failed: ${dbError.message}. Check certificates table RLS policies.`)
       setUploading(false)
