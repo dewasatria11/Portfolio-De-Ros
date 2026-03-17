@@ -247,16 +247,16 @@ const ProjectForm = ({
         </div>
 
         <InputField
-          label="Tech Stack (comma separated)"
+          label="Teknologi yang Digunakan (Pisahkan dengan koma)"
           value={form.TechStack}
           onChange={set("TechStack")}
-          placeholder="e.g. React, Tailwind, Supabase"
+          placeholder="Contoh: HTML, CSS, JavaScript"
         />
         <InputField
-          label="Key Features (comma separated)"
+          label="Fitur Utama (Pisahkan dengan koma)"
           value={form.Features}
           onChange={set("Features")}
-          placeholder="e.g. Auth, Dark mode, REST API"
+          placeholder="Contoh: Mode Gelap, Form Login, Pencarian"
         />
         <InputField
           label="Live URL"
