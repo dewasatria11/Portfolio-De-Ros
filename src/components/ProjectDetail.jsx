@@ -145,7 +145,7 @@ const ProjectDetails = () => {
 
   if (!project) {
     return (
-      <div className="min-h-screen bg-[#030014] flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center space-y-6 animate-fadeIn">
           <div className="w-16 h-16 md:w-24 md:h-24 mx-auto border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin" />
           <h2 className="text-xl md:text-3xl font-bold text-white">
@@ -199,7 +199,7 @@ const ProjectDetails = () => {
         `}</script>
       </Helmet>
 
-      <div className="min-h-screen bg-[#030014] px-[2%] sm:px-0 relative overflow-hidden">
+      <div className="min-h-screen bg-background px-[2%] sm:px-0 relative overflow-hidden">
         <div className="fixed inset-0">
           <div className="absolute -inset-[10px] opacity-20">
             <div className="absolute top-0 -left-4 w-72 md:w-96 h-72 md:h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob" />
